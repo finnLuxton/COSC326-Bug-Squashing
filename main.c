@@ -53,7 +53,7 @@ int findPhone(struct S** ss, int s){
 }
 
 int main(int argc, char ** argv) {
-    int i;
+    int i, c;
     int count = 0;
     (void)argc;
     
@@ -63,20 +63,20 @@ int main(int argc, char ** argv) {
 
     FILE *f = fopen(argv[1], "r");
 
-    // Change to while loop until file is entirely read
-    for(i = 0; i < 50; i++){
+    while((c = fgetc(f)) != EOF){
 
         // Figure that shit out
         s->firstName = (char*) malloc(80 * sizeof(s->firstName[0]));
         s->lastName = (char*) malloc(80 * sizeof(s->firstName[0]));
         s->emailAddress = (char*) malloc(80 * sizeof(s->firstName[0]));
 
-        
 	fscanf(f, "%s %s %d %s", s->firstName, s->lastName, &s->phone, s->emailAddress);
 	
 	ss[count] = s;
         count += 1;
     }
+    fclose(f);
+
     // Scan user input for command
     int command = 10;
     while(command != 0){
