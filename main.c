@@ -19,8 +19,7 @@ int findFirstName(struct S** ss, char* s){
     for(i = 0; i < count; i++){
         // C cannot do this, use the stringcompare method
         // Same for all except phone, since its an int
-        if(ss[i]->firstName == s)
-            return 1;
+        if(strcmp(ss[i]->firstName, s)) return 1;
     }
     return 0;
 }
@@ -28,8 +27,7 @@ int findFirstName(struct S** ss, char* s){
 int findLastName(struct S** ss, char* s){
     int i;
     for(i = 0; i < count; i++){
-        if(ss[i]->lastName == s)
-            return 1;
+        if(strcmp(ss[i]->lastName, s)) return 1;
     }
     return 0;
 }
@@ -37,8 +35,7 @@ int findLastName(struct S** ss, char* s){
 int findEmail(struct S** ss, char* s){
     int i;
     for(i = 0; i < count; i++){
-        if(ss[i]->emailAddress == s)
-            return 1;
+        if(strcmp(ss[i]->emailAddress, s)) return 1;
     }
     return 0;
 }
@@ -46,8 +43,7 @@ int findEmail(struct S** ss, char* s){
 int findPhone(struct S** ss, int s){
     int i;
     for(i = 0; i < count; i++){
-        if(ss[i]->phone == s)
-            return 1;
+        if(ss[i]->phone == s) return 1;
     }
     return 0;
 }
