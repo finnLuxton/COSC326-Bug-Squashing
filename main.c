@@ -2,104 +2,141 @@
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdio.h>
 
-// Replace variable name
-struct S{
+struct CustRecord{
     char* firstName;
     char* lastName;
-    int phone;
+    char* phone;
     char* emailAddress;
 };
 
 static int count;
 
-int findFirstName(struct S** ss, char* s){
+int findFirstName(struct CustRecord** ss, char* s){
     int i;
     for(i = 0; i < count; i++){
-        // C cannot do this, use the stringcompare method
-        // Same for all except phone, since its an int
-        if(strcmp(ss[i]->firstName, s)) return 1;
+        if(strcmp(ss[i]->firstName, s) == 0) return i;
     }
-    return 0;
+    return -1;
 }
 
-int findLastName(struct S** ss, char* s){
+int findLastName(struct CustRecord** ss, char* s){
     int i;
     for(i = 0; i < count; i++){
-        if(strcmp(ss[i]->lastName, s)) return 1;
+        if(strcmp(ss[i]->lastName, s) == 0) return i;
     }
-    return 0;
+    return -1;
 }
 
-int findEmail(struct S** ss, char* s){
+int findEmail(struct CustRecord** ss, char* s){
     int i;
     for(i = 0; i < count; i++){
-        if(strcmp(ss[i]->emailAddress, s)) return 1;
+        if(strcmp(ss[i]->emailAddress, s) == 0) return i;
     }
-    return 0;
+    return -1;
 }
 
-int findPhone(struct S** ss, int s){
+int findPhone(struct CustRecord** ss, char* s){
     int i;
     for(i = 0; i < count; i++){
-        if(ss[i]->phone == s) return 1;
+        if(strcmp(ss[i]->phone, s) == 0) return i;
     }
-    return 0;
+    return -1;
 }
 
-int main(int argc, char ** argv) {
-    int i, c;
-    int count = 0;
-    (void)argc;
+int main(int argc, char *argv[]) {
+
+    char firstName[40];
+    char lastName[40];
+    char phone[40];
+    char emailAddress[40];
+    int command = 0;
     
-    // 242 code, maybe bst where you str copy in memory allocation so it never overrises itself and thats how you fi the problem good luck me
-    struct S** ss = (struct S**) malloc(100*sizeof(ss[0]));
-    struct S* s = malloc(sizeof(*s));
+    struct CustRecord** ss = (struct CustRecord**) malloc(100*sizeof(ss[0]));
+    struct CustRecord* s;
 
-    FILE *f = fopen(argv[1], "r");
+    FILE *f;
+    char *inputFile;
+    
+    (void)argc;
 
-    while((c = fgetc(f)) != EOF){
+    inputFile = argv[1];
+    f=fopen(inputFile, "r");
+   
+    if(f != NULL){
 
-        // Figure that shit out
-        s->firstName = (char*) malloc(80 * sizeof(s->firstName[0]));
-        s->lastName = (char*) malloc(80 * sizeof(s->firstName[0]));
-        s->emailAddress = (char*) malloc(80 * sizeof(s->firstName[0]));
+        while(fscanf(f, "%s %s %s %s", firstName, lastName, phone, emailAddress) != EOF){
 
-	fscanf(f, "%s %s %d %s", s->firstName, s->lastName, &s->phone, s->emailAddress);
-	
-	ss[count] = s;
-        count += 1;
+            s = malloc(sizeof(*s));
+            
+            s->firstName = (char*) malloc(80 * sizeof(s->firstName[0]));
+            s->lastName = (char*) malloc(80 * sizeof(s->firstName[0]));
+            s->emailAddress = (char*) malloc(80 * sizeof(s->firstName[0]));
+            s->phone = (char*) malloc(80 * sizeof(s->phone[0]));
+            
+            s->firstName = strcpy(s->firstName, firstName);
+            s->lastName = strcpy(s->lastName, lastName);
+            s->emailAddress = strcpy(s->emailAddress, emailAddress);
+            s->phone = strcpy(s->phone, phone);
+            
+            ss[count] = s; 
+            
+            count += 1;
+        }
+    } else {
+        perror("fopen:");
     }
     fclose(f);
 
-    // Scan user input for command
-    int command = 10;
+    printf("Please enter the # of a search category.\n1: First Name\n2: Last Name\n3: Phone Number\n4: Email Address\n");
+    scanf("%d", &command);
+    printf("__________________\n");
     while(command != 0){
-        //Should be correct
-        char* val = malloc(100*sizeof(val[0]));
 
-        //Command + " " + lookingforinput(eg finn)
+        char* val = malloc(100*sizeof(val[0]));
+        printf("Please enter what you are searching for\n");
+        fscanf(stdin, "%s", val);
+        
         switch(command){
-            // Check to see if input is correct
             case 1:
-                printf("Looking for firstname %s\n", val);
-                printf("found it? %d\n", findFirstName(ss, val));
+                printf("Looking for first name %s\n", val);
+                if(findFirstName(ss, val) >= 0){
+                    printf("Found in customer record %d\n", findFirstName(ss, val));
+                }else{
+                    printf("Does not exist in customer records\n");
+                }
+                command = 0;
                 break;
             case 2:
-                printf("looking for lastname %s\n", val);
-                printf("found it? %d\n", findLastName(ss, val));
+                printf("looking for last name %s\n", val);
+                if(findLastName(ss, val) >= 0){
+                    printf("Found in customer record %d\n", findLastName(ss, val));
+                }else{
+                    printf("Does not exist in customer records\n");
+                }
+                command = 0;
                 break;
             case 3:
-                printf("looking for phone %s\n", val);
-                printf("found it? %d\n", findPhone(ss, atoi(val)));
+                printf("looking for phone number %s\n", val);
+                if(findPhone(ss, val) >= 0){
+                    printf("Found in customer record %d\n", findPhone(ss, val));
+                }else{
+                    printf("Does not exist in customer records\n");
+                }
+                command = 0;
                 break;
             case 4:
-                printf("looking for email %s\n", val);
-                printf("found it? %d\n", findEmail(ss, val));
+                printf("looking for email address %s\n", val);
+                if(findEmail(ss, val) >= 0){
+                    printf("Found in customer record %d\n", findEmail(ss, val));
+                }else{
+                    printf("Does not exist in customer records\n");
+                }
+                command = 0;
                 break;
             default:
-                fprintf(stderr, "Invalid input. Please input 1, 2, 3, or 4");
+                fprintf(stderr, "Invalid input. Please input 1, 2, 3, or 4\n");
+                command = 0;
                 break;
         }
     }
